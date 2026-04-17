@@ -22,3 +22,26 @@ exports.crearProducto = (req, res) => {
         res.send('Producto agregado con éxito');
     });
 };
+// Función para actualizar (Página 38 de la guía)
+exports.actualizarProducto = (req, res) => {
+    const id = req.params.id;
+    const datosActualizados = {
+        nombre: req.body.nombre,
+        precio: req.body.precio,
+        stock: req.body.stock,
+        imagen: req.body.imagen
+    };
+
+    db.query('UPDATE productos SET ? WHERE id = ?', [datosActualizados, id], (err, result) => {
+        if (err) throw err;
+        res.send('Producto actualizado con éxito');
+    });
+};
+// Función para eliminar un producto
+exports.eliminarProducto = (req, res) => {
+    const id = req.params.id;
+    db.query('DELETE FROM productos WHERE id = ?', [id], (err, result) => {
+        if (err) throw err;
+        res.send('Producto eliminado correctamente');
+    });
+};

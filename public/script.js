@@ -46,26 +46,70 @@ async function actualizarProducto(id, datos) {
 async function cargarProductos() {
     const res = await fetch('/api/productos');
     const productos = await res.json();
-    const lista = document.getElementById('listaProductos');
-    lista.innerHTML = '';
+    const cuerpoTabla = document.getElementById('cuerpoTabla');
+    cuerpoTabla.innerHTML = '';
+
+    if (productos.length === 0) {
+        cuerpoTabla.innerHTML = '<tr><td colspan="5" style="text-align:center;">No hay productos en el inventario</td></tr>';
+        return;
+    }
 
     productos.forEach(p => {
-        const item = document.createElement('li');
-        item.textContent = `${p.nombre} - S/ ${p.precio} (Stock: ${p.stock}) `;
+        const fila = document.createElement('tr');
+        
+        // Columna Imagen
+        const tdImagen = document.createElement('td');
+        if (p.imagen) {
+            const img = document.createElement('img');
+            img.src = p.imagen;
+            img.alt = p.nombre;
+            img.className = 'img-miniatura';
+            tdImagen.appendChild(img);
+        } else {
+            tdImagen.innerHTML = '<span class="sin-foto">📷</span>';
+        }
+        
+        // Columna Nombre
+        const tdNombre = document.createElement('td');
+        tdNombre.textContent = p.nombre;
+        
+        // Columna Precio
+        const tdPrecio = document.createElement('td');
+        tdPrecio.textContent = `S/ ${p.precio.toFixed(2)}`;
+        
+        // Columna Stock
+        const tdStock = document.createElement('td');
+        const spanStock = document.createElement('span');
+        spanStock.textContent = p.stock;
+        spanStock.className = p.stock > 0 ? 'stock-ok' : 'stock-agotado';
+        tdStock.appendChild(spanStock);
+        
+        // Columna Acciones
+        const tdAcciones = document.createElement('td');
+        tdAcciones.className = 'td-acciones';
 
         const botonEditar = document.createElement('button');
         botonEditar.type = 'button';
         botonEditar.textContent = 'Editar';
+        botonEditar.className = 'btn-editar';
         botonEditar.addEventListener('click', () => prepararEdicion(p));
 
         const botonEliminar = document.createElement('button');
         botonEliminar.type = 'button';
         botonEliminar.textContent = 'Eliminar';
+        botonEliminar.className = 'btn-eliminar';
         botonEliminar.addEventListener('click', () => eliminarProducto(p.id));
 
-        item.appendChild(botonEditar);
-        item.appendChild(botonEliminar);
-        lista.appendChild(item);
+        tdAcciones.appendChild(botonEditar);
+        tdAcciones.appendChild(botonEliminar);
+
+        fila.appendChild(tdImagen);
+        fila.appendChild(tdNombre);
+        fila.appendChild(tdPrecio);
+        fila.appendChild(tdStock);
+        fila.appendChild(tdAcciones);
+        
+        cuerpoTabla.appendChild(fila);
     });
 }
 

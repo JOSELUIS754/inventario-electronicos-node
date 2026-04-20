@@ -18,8 +18,22 @@
 
     <div id="mensaje"></div>
 
-    <h2>Lista de Inventario</h2>
-    <ul id="listaProductos"></ul>
+    <div class="tabla-contenedor">
+        <table id="tablaProductos">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <!-- Los productos se cargarán aquí dinámicamente -->
+            </tbody>
+        </table>
+    </div>
 
     <script src="script.js"></script>
 </body>
